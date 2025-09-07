@@ -32,6 +32,8 @@
 - name: Find maya executable
   become: true
   become_user: "{{ user }}"
+  environment:
+    PATH: "{{ ansible_env.PATH }}:{{ user_path }}"
   ansible.builtin.command:
     cmd: which maya
   register: maya_path
