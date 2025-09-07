@@ -1,0 +1,86 @@
+---
+
+- name: Install pip module dependency
+  become: true
+  ansible.builtin.package:
+    name: python3-packaging
+    state: present
+
+- name: Locate maya executable
+  become: true
+  become_user: "{{ user }}"
+  environment:
+    PATH: "{{ ansible_env.PATH }}:{{ user_path }}"
+  ansible.builtin.command:
+    cmd: "which maya"
+  register: maya_path
+  changed_when: false
+
+# WARNING only works with license
+# - name: Get maya's python executable path
+#   become: true
+#   become_user: "{{ user }}"
+#   ansible.builtin.command:
+#     cmd: "{{ maya_path.stdout }} batch -command 'python(\"import sys, os; print(os.path.join(os.path.dirname(sys.executable), \"mayapy\"))\")'"
+#   register: maya_python
+#   changed_when: false
+
+# - name: Set maya python path fact
+#   ansible.builtin.set_fact:
+#     maya_python_path: "{{ maya_python.stdout_lines[-1] }}"
+
+- name: Find maya executable
+  become: true
+  become_user: "{{ user }}"
+  ansible.builtin.command:
+    cmd: which maya
+  register: maya_path
+  changed_when: false
+
+- name: Resolve symlink to get real path
+  become: true
+  become_user: "{{ user }}"
+  ansible.builtin.command:
+    cmd: readlink -f "{{ maya_path.stdout }}"
+  changed_when: false
+  register: maya_full_path
+
+- name: Set Maya installation root
+  ansible.builtin.set_fact:
+    maya_bin_dir: "{{ maya_full_path.stdout | dirname }}"
+
+- name: Ensure maya dev virtualenv exists with latest pip
+  become: true
+  become_user: "{{ user }}"
+  ansible.builtin.pip:
+    name: pip
+    state: latest
+    virtualenv: "{{ maya_venv_path }}"
+    virtualenv_command: "{{ maya_bin_dir }}/mayapy -m venv"
+
+- name: Install maya dev packages
+  become: true
+  become_user: "{{ user }}"
+  loop: "{{ maya_python_modules }}"
+  ansible.builtin.pip:
+    name: "{{ item }}"
+    virtualenv: "{{ maya_venv_path }}"
+
+- name: Get python version
+  become: true
+  become_user: "{{ user }}"
+  ansible.builtin.command:
+    cmd: "{{ maya_bin_dir }}/mayapy -c \"import sys; print(f'python{sys.version_info.major}.{sys.version_info.minor}')\""
+  changed_when: false
+  register: mayapy_version
+
+- name: Create path link to maya install packages
+  become: true
+  become_user: "{{ user }}"
+  ansible.builtin.copy:
+    content: |
+      "{{ maya_bin_dir | dirname }}/lib/{{ mayapy_version.stdout }}/site-packages"
+    dest: "{{ maya_venv_path }}/lib/{{ mayapy_version.stdout }}/site-packages/maya_path.pth"
+    mode: "0755"
+
+...

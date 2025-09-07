@@ -1,0 +1,23 @@
+---
+
+- name: Set maya user script path
+  ansible.builtin.set_fact:
+    maya_user_scripts: "{{ maya_user_config }}/{{ maya_version }}/scripts"
+
+- name: Ensure user script dir exists
+  become: true
+  become_user: "{{ user }}"
+  ansible.builtin.file:
+    path: "{{ maya_user_scripts }}"
+    state: "directory"
+    mode: "0766"
+
+- name: Write user setup
+  become: true
+  become_user: "{{ user }}"
+  ansible.builtin.copy:
+    src: userSetup.py
+    dest: "{{ maya_user_scripts }}/userSetup.py"
+    mode: "0644"
+
+...

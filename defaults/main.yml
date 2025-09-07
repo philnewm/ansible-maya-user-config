@@ -1,5 +1,18 @@
 ---
 
 state: present
+user: "vagrant"
+
+maya_gnome_favorite: true
+maya_desktop_launcher: Autodesk-Maya2025.desktop
+user_path: "/usr/local/bin:/usr/local/sbin"
+user_home: "/home/{{ user }}"
+maya_venv_path: "/home/{{ user }}/python_venv/maya_venv"
+maya_user_config: "{{ user_home }}/maya"
+maya_pipeline_dev: true
+
+maya_python_modules:
+  - maya-stubs
+  - pymel
 
 ...

@@ -7,8 +7,39 @@
     name: python-apt-common
     state: present
 
-# INFO This task may be obsolete for your use-case
 - name: Gather package facts
   ansible.builtin.package_facts:
+
+- name: Get maya version
+  become: true
+  become_user: "{{ user }}"
+  environment:
+    PATH: "{{ ansible_env.PATH }}:{{ user_path }}"
+  ansible.builtin.shell:
+    cmd: |
+      set -o pipefail
+      maya -v
+  args:
+    executable: /bin/bash
+  register: present_maya_version
+  changed_when: false
+
+- name: Set maya version
+  ansible.builtin.set_fact:
+    maya_version: "{{ present_maya_version.stdout.split(',')[0].split(' ')[1] }}"
+
+- name: Configure maya
+  ansible.builtin.include_tasks:
+    file: config.yml
+
+- name: Add to gnome favorites
+  when: "'gnome-shell' in ansible_facts.packages and maya_gnome_favorite"
+  ansible.builtin.include_tasks:
+    file: gnome_favorite.yml
+
+- name: Setup maya dev env
+  when: maya_pipeline_dev
+  ansible.builtin.include_tasks:
+    file: development_setup.yml
 
 ...

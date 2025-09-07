@@ -1,21 +1,14 @@
 ---
 
 galaxy_info:
-  role_name: maya-user-config
-  namespace: philnewm
-  author: author_name
-  description: ansible-role-template description
-  license: some_license
+  role_name: maya_user_config
+  author: philnewm
+  description: configure maya user settings
+  license: MIT
   min_ansible_version: "2.1"
   platforms:
     - name: EL
       versions:
         - "9"
-    - name: Debian
-      versions:
-        - "bookworm"
-    - name: "Ubuntu"
-      versions:
-        - "jammy"
   galaxy_tags: []
-dependencies: []
+dependencies: [philnewm.maya]
