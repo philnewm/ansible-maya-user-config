@@ -1,3 +1,103 @@
 ---
 
+- name: Get maya version
+  become: true
+  become_user: "{{ user }}"
+  environment:
+    PATH: "{{ ansible_env.PATH }}:{{ user_path }}"
+  ansible.builtin.shell:
+    cmd: |
+      set -o pipefail
+      maya -v
+  args:
+    executable: /bin/bash
+  register: present_maya_version
+  changed_when: false
+
+- name: Set maya version
+  ansible.builtin.set_fact:
+    maya_version: "{{ present_maya_version.stdout.split(',')[0].split(' ')[1] }}"
+
+- name: Set maya user script path
+  ansible.builtin.set_fact:
+    maya_user_scripts: "{{ maya_user_config }}/{{ maya_version }}/scripts"
+
+- name: Get usersetup file
+  become: true
+  become_user: "{{ user }}"
+  ansible.builtin.stat:
+    path: "{{ maya_user_scripts }}/userSetup.py"
+  register: usersetup_result
+
+- name: Test usersetup
+  ansible.builtin.assert:
+    that:
+      - usersetup_result.stat.exists
+    fail_msg: "Failed to find 'userSetup.py' in {{ maya_user_scripts }}"
+    quiet: true
+
+- name: Check for gnoem favorite
+  when: maya_gnome_favorite
+  block:
+    - name: Set desktop launcher
+      ansible.builtin.set_fact:
+        maya_desktop_launcher: "Autodesk-Maya{{ maya_version }}.desktop"
+
+    - name: Get current favorite apps
+      become: true
+      become_user: "{{ user }}"
+      community.general.dconf:
+        key: /org/gnome/shell/favorite-apps
+        state: read
+      register: current_favorites
+
+    - name: Clean favorites
+      ansible.builtin.set_fact:
+        gnome_favorites: "{{ current_favorites.value | from_yaml | default([], true) }}"
+
+    - name: Test gnome favorite
+      ansible.builtin.assert:
+        that:
+          - maya_desktop_launcher in gnome_favorites
+        fail_msg: "Failed to find '{{ maya_desktop_launcher }}' in gnoem favorites"
+        quiet: true
+
+- name: Test development setup
+  when: maya_pipeline_dev
+  block:
+    - name: Check if maya python virtual environment exists
+      become: true
+      become_user: "{{ user }}"
+      ansible.builtin.stat:
+        path: "{{ maya_venv_path }}"
+      register: venv_stat
+
+    - name: Assert that virtual environment directory exists
+      ansible.builtin.assert:
+        that:
+          - venv_stat.stat.exists
+          - venv_stat.stat.isdir
+        fail_msg: "Virtual environment directory does not exist at {{ maya_venv_path }}"
+        quiet: true
+
+    - name: Get list of installed Python packages in the venv
+      become: true
+      become_user: "{{ user }}"
+      ansible.builtin.command:
+        cmd: "{{ maya_venv_path }}/bin/pip list --format=json"
+      register: pip_list
+      changed_when: false
+
+    - name: Parse installed packages
+      ansible.builtin.set_fact:
+        installed_packages: "{{ pip_list.stdout | from_json | map(attribute='name') | list }}"
+
+    - name: Assert expected Python packages are installed
+      loop: "{{ maya_python_modules }}"
+      ansible.builtin.assert:
+        that:
+          - (item.split('==')[0]) in installed_packages
+        fail_msg: "Failed to find python module {{ item }} in environment '{{ maya_venv_path }}'"
+        quiet: true
+
 ...
