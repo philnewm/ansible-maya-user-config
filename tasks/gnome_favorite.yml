@@ -6,6 +6,10 @@
     name: python3-psutil
     state: present
 
+- name: Set desktop launcher
+  ansible.builtin.set_fact:
+    maya_desktop_launcher: "Autodesk-Maya{{ maya_version }}.desktop"
+
 - name: Get current favorite apps
   become: true
   become_user: "{{ user }}"
