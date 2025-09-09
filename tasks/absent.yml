@@ -16,7 +16,7 @@
     state: absent
 
 - name: Remove from gnome favorites
-  when: maya_gnome_favorite
+  when: "'gnome-shell' in ansible_facts.packages and maya_gnome_favorite"
   block:
     - name: Set desktop launcher
       ansible.builtin.set_fact:
