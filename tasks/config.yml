@@ -20,4 +20,15 @@
     dest: "{{ maya_user_scripts }}/userSetup.py"
     mode: "0644"
 
+- name: Write maya environment
+  become: true
+  become_user: "{{ user }}"
+  ansible.builtin.copy:
+    dest: "{{ maya_user_config }}/{{ maya_version }}/Maya.env"
+    content: |
+      {% for key, value in maya_env.items() %}
+      {{ key }}={{ value }}
+      {% endfor %}
+    mode: '0644'
+
 ...

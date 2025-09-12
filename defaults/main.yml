@@ -14,4 +14,14 @@ maya_python_modules:
   - maya-stubs
   - pymel
 
+maya_env:
+  "MAYA_DISABLE_CIP": 1
+  "MAYA_DISABLE_CER": 1
+  "MAYA_SKIP_USERSETUP": 1
+  "MAYA_NO_INITIAL_AUTOLOAD_MT": 1
+  "MAYA_OFFSCREEN_HRB": 1
+  "MAYA_RENDER_DESC_PATH": "_"
+  "MAYA_MODULE_PATH": "_"
+  "MAYA_PLUG_IN_PATH": "_"
+
 ...
