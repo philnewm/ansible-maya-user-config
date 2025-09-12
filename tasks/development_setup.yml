@@ -81,7 +81,7 @@
   become_user: "{{ user }}"
   ansible.builtin.copy:
     content: |
-      "{{ maya_bin_dir | dirname }}/lib/{{ mayapy_version.stdout }}/site-packages"
+      {{ maya_bin_dir | dirname }}/lib/{{ mayapy_version.stdout }}/site-packages
     dest: "{{ maya_venv_path }}/lib/{{ mayapy_version.stdout }}/site-packages/maya_path.pth"
     mode: "0755"
 
