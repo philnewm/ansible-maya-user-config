@@ -15,34 +15,6 @@
     path: "{{ maya_venv_path }}"
     state: absent
 
-- name: Remove from gnome favorites
-  when: "'gnome-shell' in ansible_facts.packages and maya_gnome_favorite"
-  block:
-    - name: Set desktop launcher
-      ansible.builtin.set_fact:
-        maya_desktop_launcher: "Autodesk-Maya{{ maya_version }}.desktop"
-
-    - name: Get current favorite apps
-      become: true
-      become_user: "{{ user }}"
-      community.general.dconf:
-        key: /org/gnome/shell/favorite-apps
-        state: read
-      register: current_favorites
-
-    - name: Clean favorites
-      ansible.builtin.set_fact:
-        gnome_favorites: "{{ current_favorites.value | from_yaml | default([], true) }}"
-
-    - name: Remove maya from favorites
-      become: true
-      become_user: "{{ user }}"
-      when: maya_desktop_launcher not in gnome_favorites
-      community.general.dconf:
-        key: /org/gnome/shell/favorite-apps
-        value: "{{ gnome_favorites | difference([maya_desktop_launcher]) }}"
-        state: present
-
 - name: Remove unused dependencies
   become: true
   ansible.builtin.package:

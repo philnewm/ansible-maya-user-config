@@ -32,11 +32,6 @@
   ansible.builtin.include_tasks:
     file: config.yml
 
-- name: Add to gnome favorites
-  when: "'gnome-shell' in ansible_facts.packages and maya_gnome_favorite"
-  ansible.builtin.include_tasks:
-    file: gnome_favorite.yml
-
 - name: Setup maya dev env
   when: maya_pipeline_dev
   ansible.builtin.include_tasks:
