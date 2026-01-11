@@ -2,22 +2,15 @@
 
 - name: Remove user settings
   become: true
-  become_user: "{{ user }}"
   ansible.builtin.file:
     path: "{{ maya_user_config }}/{{ maya_version }}"
     state: "absent"
 
 - name: Remove python venv
   become: true
-  become_user: "{{ user }}"
   when: maya_pipeline_dev
   ansible.builtin.file:
     path: "{{ maya_venv_path }}"
     state: absent
-
-- name: Remove unused dependencies
-  become: true
-  ansible.builtin.package:
-    autoremove: true
 
 ...

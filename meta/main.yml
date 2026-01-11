@@ -10,5 +10,8 @@ galaxy_info:
     - name: EL
       versions:
         - "9"
+    - name: Fedora
+      versions:
+        - "43"
   galaxy_tags: []
 dependencies: [philnewm.maya]

@@ -1,26 +1,12 @@
 ---
 
-- name: Install debian specific package_facts dependency
-  become: true
-  when: ansible_distribution == "Debian"
-  ansible.builtin.package:
-    name: python-apt-common
-    state: present
-
 - name: Gather package facts
   ansible.builtin.package_facts:
 
 - name: Get maya version
-  become: true
-  become_user: "{{ user }}"
-  environment:
-    PATH: "{{ ansible_env.PATH }}:{{ user_path }}"
-  ansible.builtin.shell:
-    cmd: |
-      set -o pipefail
-      maya -v
-  args:
-    executable: /bin/bash
+  ansible.builtin.command:
+    cmd: maya -v
+
   register: present_maya_version
   changed_when: false
 

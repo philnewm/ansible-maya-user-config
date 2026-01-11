@@ -10,9 +10,8 @@
 
 - name: Locate maya executable
   become: true
-  become_user: "{{ user }}"
   environment:
-    PATH: "{{ ansible_env.PATH }}:{{ user_path }}"
+    PATH: "{{ ansible_facts.env.PATH }}:{{ user_path }}"
   ansible.builtin.command:
     cmd: "which maya"
   register: maya_path
@@ -31,19 +30,9 @@
 #   ansible.builtin.set_fact:
 #     maya_python_path: "{{ maya_python.stdout_lines[-1] }}"
 
-- name: Find maya executable
-  become: true
-  become_user: "{{ user }}"
-  environment:
-    PATH: "{{ ansible_env.PATH }}:{{ user_path }}"
-  ansible.builtin.command:
-    cmd: which maya
-  register: maya_path
-  changed_when: false
-
 - name: Resolve symlink to get real path
   become: true
-  become_user: "{{ user }}"
+  # become_user: "{{ user }}"
   ansible.builtin.command:
     cmd: readlink -f "{{ maya_path.stdout }}"
   changed_when: false
