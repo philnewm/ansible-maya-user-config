@@ -1,6 +1,6 @@
 ---
 
-name: CentOSStream9-CI
+name: Debian13
 
 on:
   push:
@@ -22,9 +22,9 @@ permissions:
   contents: read
 
 jobs:
-  centosstream9-ci:
+  ci:
     uses: philnewm/ansible-role-repo-control/.github/workflows/molecule-ci-vbox.yml@main
     with:
-      scenario_name: centosstream9
+      scenario_name: debian13
 
 ...

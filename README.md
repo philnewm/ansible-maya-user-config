@@ -1,6 +1,14 @@
 # Maya-user-config-Role
 
-[![Alma9-CI](https://github.com/philnewm/ansible-maya-user-config/actions/workflows/alma9-ci-caller.yml/badge.svg)](https://github.com/philnewm/ansible-maya-user-config/actions/workflows/alma9-ci-caller.yml)  [![Rocky9-CI](https://github.com/philnewm/ansible-maya-user-config/actions/workflows/rocky9-ci-caller.yml/badge.svg)](https://github.com/philnewm/ansible-maya-user-config/actions/workflows/rocky9-ci-caller.yml)  [![CentOSStream9-CI](https://github.com/philnewm/ansible-maya-user-config/actions/workflows/centosstream9-ci-caller.yml/badge.svg)](https://github.com/philnewm/ansible-maya-user-config/actions/workflows/centosstream9-ci-caller.yml)  [![Debian12-CI](https://github.com/philnewm/ansible-maya-user-config/actions/workflows/debian12-ci-caller.yml/badge.svg)](https://github.com/philnewm/ansible-maya-user-config/actions/workflows/debian12-ci-caller.yml)  [![Ubuntu2204-CI](https://github.com/philnewm/ansible-maya-user-config/actions/workflows/ubuntu2204-ci-caller.yml/badge.svg)](https://github.com/philnewm/ansible-maya-user-config/actions/workflows/ubuntu2204-ci-caller.yml)
+The role gets tested for these distributions:
+
+- AlmaLinux9
+- Rocky9
+- CentOSStream9
+- Fedora43
+
+CI in GitHub hosted runners doesn't seem to work due to insufficient storage space for a fully extracted Maya installation setup.
+Molecule testing therefore only runs locally.
 
 Role description
 
