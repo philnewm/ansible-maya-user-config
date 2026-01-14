@@ -6,7 +6,6 @@
 - name: Get maya version
   ansible.builtin.command:
     cmd: maya -v
-
   register: present_maya_version
   changed_when: false
 

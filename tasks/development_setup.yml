@@ -9,7 +9,6 @@
     state: present
 
 - name: Locate maya executable
-  become: true
   environment:
     PATH: "{{ ansible_facts.env.PATH }}:{{ user_path }}"
   ansible.builtin.command:
@@ -31,8 +30,6 @@
 #     maya_python_path: "{{ maya_python.stdout_lines[-1] }}"
 
 - name: Resolve symlink to get real path
-  become: true
-  # become_user: "{{ user }}"
   ansible.builtin.command:
     cmd: readlink -f "{{ maya_path.stdout }}"
   changed_when: false
@@ -61,7 +58,6 @@
 
 - name: Get python version
   become: true
-  become_user: "{{ user }}"
   ansible.builtin.command:
     cmd: "{{ maya_bin_dir }}/mayapy -c \"import sys; print(f'python{sys.version_info.major}.{sys.version_info.minor}')\""
   changed_when: false
@@ -69,11 +65,12 @@
 
 - name: Create path link to maya install packages
   become: true
-  become_user: "{{ user }}"
   ansible.builtin.copy:
     content: |
       {{ maya_bin_dir | dirname }}/lib/{{ mayapy_version.stdout }}/site-packages
     dest: "{{ maya_venv_path }}/lib/{{ mayapy_version.stdout }}/site-packages/maya_path.pth"
     mode: "0755"
+    owner: "{{ user }}"
+    group: "{{ user }}"
 
 ...

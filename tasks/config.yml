@@ -32,6 +32,6 @@
       {% endfor %}
     owner: "{{ user }}"
     group: "{{ user }}"
-    mode: '0644'
+    mode: "0644"
 
 ...
