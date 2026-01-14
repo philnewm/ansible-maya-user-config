@@ -1,6 +1,6 @@
 ---
 
-name: AlmaLinux9
+name: Rocky9
 
 on:
   push:
@@ -25,6 +25,7 @@ jobs:
   ci:
     uses: philnewm/ansible-role-repo-control/.github/workflows/molecule-ci-podman.yml@main
     with:
-      scenario_name: almalinux9
+      scenario_name: rocky9
+      cleanup: true
 
 ...
