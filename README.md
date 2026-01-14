@@ -1,14 +1,6 @@
 # Maya-user-config-Role
 
-The role gets tested for these distributions:
-
-- AlmaLinux9
-- Rocky9
-- CentOSStream9
-- Fedora43
-
-CI in GitHub hosted runners doesn't seem to work due to insufficient storage space for a fully extracted Maya installation setup.
-Molecule testing therefore only runs locally.
+[![AlmaLinux9-CI](https://github.com/philnewm/ansible-maya-user-config/actions/workflows/almalinux9-ci-caller.yml/badge.svg)](https://github.com/philnewm/ansible-maya-user-config/actions/workflows/almalinux9-ci-caller.yml) [![Rocky9-CI](https://github.com/philnewm/ansible-maya-user-config/actions/workflows/rocky9-ci-caller.yml/badge.svg)](https://github.com/philnewm/ansible-maya-user-config/actions/workflows/rocky9-ci-caller.yml) [![Fedora43-CI](https://github.com/philnewm/ansible-maya-user-config/actions/workflows/fedora43-ci-caller.yml/badge.svg)](https://github.com/philnewm/ansible-maya-user-config/actions/workflows/fedora43-ci-caller.yml)
 
 Role description
 
@@ -22,8 +14,6 @@ This role includes a vagrant based molecule testing setup as a submodule at `mol
  ┃ ┗ 📜 main.yml
  ┣ 📂 files
  ┃ ┗ 📜 file_placeholder.yml
- ┣ 📂 handlers
- ┃ ┗ 📜 main.yml
  ┣ 📂 meta
  ┃ ┗ 📜 main.yml
  ┣ 📂 molecule
@@ -35,12 +25,9 @@ This role includes a vagrant based molecule testing setup as a submodule at `mol
  ┃ ┣ 📜 dependencies.yml
  ┃ ┣ 📜 absent.yml
  ┃ ┗ 📜 init.yml
- ┣ 📂 templates
- ┃ ┗ ⛩️ template.j2
  ┣ 📂 vars
  ┃ ┗ 📜 main.yml
  ┗ 🗒️ README.md
- ┗ 📓 requirements.txt
  ┗ 📓 requirements.yml
 
 ```
